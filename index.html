@@ -244,9 +244,9 @@
       document.getElementById('resumo').innerHTML = linhas.join('<br>');
     }
 
-    function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])); }
+    function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;","\">":"&gt;","\"":"&quot;","'":"&#39;"}[m])); }
 
-    // ===== Envio otimizado (sem clique duplo) =====
+    // ===== Envio otimizado (sem clique duplo) — versão fetch keepalive =====
     const SHEETS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbz-DdSCT0hs04KNNT3PFKcG9ZWlQu69EiMZuR8jXW7rqubUQevgFkoriI8mLL0k-NCI/exec";
     let isSubmitting = false;
 
@@ -260,32 +260,31 @@
       enviarBtn.textContent = 'Enviando...';
       enviarBtn.disabled = true;
 
-      try {
-        if (SHEETS_WEBAPP_URL) {
-          const json = JSON.stringify(payload);
-          const blob = new Blob([json], { type: 'application/json' });
+      const json = JSON.stringify(payload);
 
-          let queued = false;
-          if (navigator.sendBeacon) {
-            queued = navigator.sendBeacon(SHEETS_WEBAPP_URL, blob);
-          }
-          if (!queued) {
-            fetch(SHEETS_WEBAPP_URL, {
-              method: 'POST',
-              mode: 'no-cors',
-              headers: { 'Content-Type': 'application/json' },
-              body: json
-            }).catch(()=>{});
-          }
-        }
-      } finally {
+      fetch(SHEETS_WEBAPP_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        keepalive: true,
+        body: json
+      }).catch(() => {
+        // retry rápido se a primeira falhar silenciosamente
+        setTimeout(() => {
+          fetch(SHEETS_WEBAPP_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            keepalive: true,
+            body: json
+          }).catch(()=>{});
+        }, 600);
+      }).finally(() => {
         setStep(6); // vai direto para a tela de agradecimento
         setTimeout(() => {
           isSubmitting = false;
           enviarBtn.textContent = originalTxt;
           enviarBtn.disabled = false;
         }, 1500);
-      }
+      });
     });
 
     function collectPayload(){
