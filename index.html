@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Missão Líbano-Portugal ❤️</title>
+  <title>Missão Líbano-Portugal</title>
   <meta name="description" content="Avalie nosso último encontro e marque o próximo, em um fluxo fofo de uma pergunta por vez." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -246,46 +246,57 @@
 
     function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;","\">":"&gt;","\"":"&quot;","'":"&#39;"}[m])); }
 
-    // ===== Envio otimizado (sem clique duplo) — versão fetch keepalive =====
     const SHEETS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbz-DdSCT0hs04KNNT3PFKcG9ZWlQu69EiMZuR8jXW7rqubUQevgFkoriI8mLL0k-NCI/exec";
-    let isSubmitting = false;
+let isSubmitting = false;
 
-    const enviarBtn = document.getElementById('enviar');
-    enviarBtn.addEventListener('click', () => {
-      if (isSubmitting) return;
-      isSubmitting = true;
+function postWithRetries(url, jsonString) {
+  try {
+    if (navigator.sendBeacon) {
+      const ok = navigator.sendBeacon(url, new Blob([jsonString], { type: 'application/json' }));
+      if (ok) return;
+    }
+  } catch (_) {}
 
-      const payload = collectPayload();
-      const originalTxt = enviarBtn.textContent;
-      enviarBtn.textContent = 'Enviando...';
-      enviarBtn.disabled = true;
+  const delays = [0, 800, 2500, 6000];
+  delays.forEach(d => {
+    setTimeout(() => {
+      try {
+        fetch(url, { method: 'POST', mode: 'no-cors', keepalive: true, body: jsonString }).catch(()=>{});
+      } catch(_) {}
+    }, d);
+  });
 
-      const json = JSON.stringify(payload);
+  const visHandler = () => {
+    if (document.visibilityState === 'hidden') {
+      try { fetch(url, { method:'POST', mode:'no-cors', keepalive:true, body: jsonString }).catch(()=>{}); } catch(_){}
+      document.removeEventListener('visibilitychange', visHandler);
+    }
+  };
+  document.addEventListener('visibilitychange', visHandler);
+}
 
-      fetch(SHEETS_WEBAPP_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        keepalive: true,
-        body: json
-      }).catch(() => {
-        // retry rápido se a primeira falhar silenciosamente
-        setTimeout(() => {
-          fetch(SHEETS_WEBAPP_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            keepalive: true,
-            body: json
-          }).catch(()=>{});
-        }, 600);
-      }).finally(() => {
-        setStep(6); // vai direto para a tela de agradecimento
-        setTimeout(() => {
-          isSubmitting = false;
-          enviarBtn.textContent = originalTxt;
-          enviarBtn.disabled = false;
-        }, 1500);
-      });
-    });
+const enviarBtn = document.getElementById('enviar');
+enviarBtn.addEventListener('click', () => {
+  if (isSubmitting) return;
+  isSubmitting = true;
+
+  const payload = collectPayload();
+  const originalTxt = enviarBtn.textContent;
+  enviarBtn.textContent = 'Enviando...';
+  enviarBtn.disabled = true;
+
+  setStep(6);
+
+  const json = JSON.stringify(payload);
+  postWithRetries(SHEETS_WEBAPP_URL, json);
+
+  setTimeout(() => {
+    isSubmitting = false;
+    enviarBtn.textContent = originalTxt;
+    enviarBtn.disabled = false;
+  }, 300);
+});
+
 
     function collectPayload(){
       const nota = (flow.querySelector('input[name="nota"]:checked')||{}).value || '';
