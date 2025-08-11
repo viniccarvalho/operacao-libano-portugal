@@ -273,7 +273,7 @@
     function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])); }
 
     // Envio para Google Sheets (cole a URL do seu Web App abaixo)
-    const SHEETS_WEBAPP_URL = ""; // ex.: "https://script.google.com/macros/s/XXXX/exec"
+    const SHEETS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbz-DdSCT0hs04KNNT3PFKcG9ZWlQu69EiMZuR8jXW7rqubUQevgFkoriI8mLL0k-NCI/exec"; // ex.: "https://script.google.com/macros/s/XXXX/exec"
     document.getElementById('enviar').addEventListener('click', async ()=>{
       const payload = collectPayload();
       try{
