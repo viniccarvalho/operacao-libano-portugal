@@ -9,7 +9,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    /* ======= TOKENS (clean com acentos 🇱🇧🇵🇹) ======= */
     :root{
       --bg:#ffffff; --ink:#1A1A1A; --muted:#6B7280; --line:#E5E7EB;
       --red:#C81E1E; --green:#0B8A3A; --ok:#16A34A; --warn:#F7C600;
@@ -32,13 +31,11 @@
     .underline{height:2px;background:linear-gradient(90deg,var(--green),var(--red));border-radius:2px;margin-top:6px}
     .card{background:#fff;border:1px solid var(--line);border-radius:var(--rad);box-shadow:var(--shadow); padding:20px}
 
-    /* ======= STEPPER ======= */
     .stepper{display:flex;gap:8px;align-items:center;margin:6px 0 14px}
     .step{width:10px;height:10px;border-radius:999px;background:#E5E7EB}
     .step.done{background:var(--green)}
     .step.active{background:var(--red)}
 
-    /* ======= FORM / CONTROLES ======= */
     .screen{display:none;opacity:0;transform:translateY(6px);transition:.22s ease}
     .screen.active{display:block;opacity:1;transform:none}
     .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
@@ -56,7 +53,6 @@
     textarea{min-height:120px; resize:vertical}
     input:focus, textarea:focus{ border-color:rgba(12,160,70,.6); box-shadow:0 0 0 4px rgba(12,160,70,.12)}
 
-    /* ======= RATING HEARTS ======= */
     .hearts{display:flex;gap:10px}
     .heart{position:relative;width:44px;height:44px}
     .heart input{appearance:none;-webkit-appearance:none;margin:0;width:44px;height:44px;cursor:pointer}
@@ -66,7 +62,6 @@
     .grid{display:grid;gap:12px}
     @media (min-width:760px){ .grid-2{grid-template-columns:1fr 1fr} }
 
-    /* ======= MOBILE TUNING ======= */
     @media (max-width:520px){
       .card{padding:16px}
       .controls{flex-direction:column}
@@ -76,11 +71,7 @@
       .heart input{width:40px;height:40px}
       .heart svg{width:40px;height:40px}
     }
-
-    /* Acessibilidade motion */
-    @media (prefers-reduced-motion: reduce){
-      .screen{transition:none}
-    }
+    @media (prefers-reduced-motion: reduce){ .screen{transition:none} }
 
     .hint{font-size:13px;color:var(--muted)}
     .ok{color:var(--ok)}
@@ -100,12 +91,9 @@
     </header>
 
     <div class="card">
-      <!-- STEPPER -->
       <div class="stepper" id="stepper" aria-hidden="true"></div>
 
-      <!-- SCREENS -->
       <form id="flow" class="grid">
-        <!-- DIV 0 — Saudação -->
         <section class="screen active" data-step="0">
           <p style="margin:0 0 8px;font-size:18px;font-weight:700">Nariman, amei nosso primeiro encontro!</p>
           <p class="muted" style="margin:0 0 12px">Conforme as diretrizes da LGPD, este questionário possui termo de uso: suas respostas serão armazenadas exclusivamente em meu coração e utilizadas para aperfeiçoar encontros futuros. Site protegido com muito amor ❤️</p>
@@ -114,7 +102,6 @@
           </div>
         </section>
 
-        <!-- DIV 1 — Nota geral -->
         <section class="screen" data-step="1">
           <label id="rating-label">Que nota você dá pro nosso encontro? ⭐</label>
           <div class="hearts" role="radiogroup" aria-labelledby="rating-label">
@@ -131,7 +118,6 @@
           <div class="hint" id="rating-hint" style="margin-top:6px"></div>
         </section>
 
-        <!-- DIV 2 — O que você mais gostou? -->
         <section class="screen" data-step="2">
           <label for="gostou">O que você mais curtiu?</label>
           <textarea id="gostou" name="gostou" placeholder="Ex.: conversa profunda, piadas bobas, PPT feito de madrugada, química…"></textarea>
@@ -141,17 +127,15 @@
           </div>
         </section>
 
-        <!-- DIV 3 — O que posso melhorar? -->
         <section class="screen" data-step="3">
           <label for="melhorar">E o que posso melhorar pro próximo?</label>
-          <textarea id="melhorar" name="melhorar" placeholder="Sua opinião é muito importante pra nós!"></textarea>
+          <textarea id="melhorar" name="melhorar" placeholder="Ex.: chegar no horário, escolha do lugar, ouvir mais, falar menos de trabalho… — Vou usar pra ficar melhor!"></textarea>
           <div class="controls">
             <button class="btn btn-ghost" data-prev type="button">Voltar</button>
             <button class="btn btn-primary" data-next>Próximo</button>
           </div>
         </section>
 
-        <!-- DIV 4 — Marcar próximo encontro (sem lugar) -->
         <section class="screen" data-step="4">
           <p style="margin:0 0 6px;font-weight:700">Já estou ansioso para te ver de novo 😍</p>
           <label style="margin-top:8px">Quando podemos nos ver?</label>
@@ -171,7 +155,6 @@
           </div>
         </section>
 
-        <!-- DIV 5 — Confirmação + envio pro Sheets -->
         <section class="screen" data-step="5">
           <p style="margin:0 0 10px;font-weight:700">Confere se está tudo certinho 👇</p>
           <div id="resumo" class="muted" style="line-height:1.6"></div>
@@ -181,7 +164,6 @@
           </div>
         </section>
 
-        <!-- DIV 6 — Tela de agradecimento -->
         <section class="screen" data-step="6">
           <p style="margin:0 0 8px;font-size:18px;font-weight:700">Obrigadíssimo, Nariman! 💖</p>
           <p class="muted" style="margin:0 0 12px">Suas respostas foram recebidas com carinho. O setor responsável vai entrar em contato em breve. Já estou contando os dias para o próximo encontro! ✨</p>
@@ -193,18 +175,16 @@
     </div>
 
     <footer>
-      Feito com carinho — e um pouco de JavaScript — por <strong>você</strong> 💫
+      Feito com carinho — e um pouco de JavaScript
     </footer>
   </div>
 
   <script>
-    // ========= STATE =========
     const flow = document.getElementById('flow');
     const screens = [...flow.querySelectorAll('.screen')];
     const stepper = document.getElementById('stepper');
 
-    // Cria stepper (não inclui a tela final de agradecimento)
-    const totalSteps = screens.length - 1; // telas de 0 a 5
+    const totalSteps = screens.length - 1;
     for(let i=0;i<totalSteps;i++){
       const s = document.createElement('div'); s.className='step' + (i===0?' active':''); stepper.appendChild(s);
     }
@@ -219,7 +199,6 @@
 
     let current = 0;
 
-    // Próximo/Anterior
     flow.addEventListener('click', (e)=>{
       const nextBtn = e.target.closest('[data-next]');
       const prevBtn = e.target.closest('[data-prev]');
@@ -228,15 +207,13 @@
     });
 
     function goNext(){
-      // validações simples
       if(current===1){
         const has = flow.querySelector('input[name="nota"]:checked');
         if(!has){ return; }
       }
-      if(current < 5) setStep(current+1); // até a tela de confirmação
+      if(current < 5) setStep(current+1);
     }
 
-    // Habilitar Próximo na etapa de nota
     const ratingNext = screens[1].querySelector('[data-next]');
     screens[1].addEventListener('change', ()=>{
       const has = flow.querySelector('input[name="nota"]:checked');
@@ -248,11 +225,9 @@
       }
     });
 
-    // data mínima = amanhã
     const dataEl = document.getElementById('data');
     if(dataEl){ const t = new Date(); t.setDate(t.getDate()+1); dataEl.min = t.toISOString().split('T')[0]; }
 
-    // Resumo dinâmico (Div 5)
     function updateResumo(){
       if(current!==5) return;
       const nota = (flow.querySelector('input[name="nota"]:checked')||{}).value || '—';
@@ -260,7 +235,6 @@
       const melhorar = (flow.melhorar?.value||'').trim() || '—';
       const data = flow.data?.value || ''; const hora = flow.hora?.value || '';
       const dataFmt = data? new Date(data + 'T' + (hora||'19:00')).toLocaleString('pt-BR', {dateStyle:'full', timeStyle: hora? 'short':'short'}) : '';
-
       const linhas = [
         `⭐ Nota: <strong>${nota}</strong>`,
         `❤️ Curtiu: ${escapeHtml(gostou)}`,
@@ -272,23 +246,45 @@
 
     function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])); }
 
-    // Envio para Google Sheets (cole a URL do seu Web App abaixo)
-    const SHEETS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbz-DdSCT0hs04KNNT3PFKcG9ZWlQu69EiMZuR8jXW7rqubUQevgFkoriI8mLL0k-NCI/exec"; // ex.: "https://script.google.com/macros/s/XXXX/exec"
-    document.getElementById('enviar').addEventListener('click', async ()=>{
+    // ===== Envio otimizado (sem clique duplo) =====
+    const SHEETS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbz-DdSCT0hs04KNNT3PFKcG9ZWlQu69EiMZuR8jXW7rqubUQevgFkoriI8mLL0k-NCI/exec";
+    let isSubmitting = false;
+
+    const enviarBtn = document.getElementById('enviar');
+    enviarBtn.addEventListener('click', () => {
+      if (isSubmitting) return;
+      isSubmitting = true;
+
       const payload = collectPayload();
-      try{
-        if(!SHEETS_WEBAPP_URL){
-          // Modo demo: mostra a tela final para você ver o fluxo
-          setStep(6);
-          return;
+      const originalTxt = enviarBtn.textContent;
+      enviarBtn.textContent = 'Enviando...';
+      enviarBtn.disabled = true;
+
+      try {
+        if (SHEETS_WEBAPP_URL) {
+          const json = JSON.stringify(payload);
+          const blob = new Blob([json], { type: 'application/json' });
+
+          let queued = false;
+          if (navigator.sendBeacon) {
+            queued = navigator.sendBeacon(SHEETS_WEBAPP_URL, blob);
+          }
+          if (!queued) {
+            fetch(SHEETS_WEBAPP_URL, {
+              method: 'POST',
+              mode: 'no-cors',
+              headers: { 'Content-Type': 'application/json' },
+              body: json
+            }).catch(()=>{});
+          }
         }
-        await fetch(SHEETS_WEBAPP_URL, {
-          method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
-        });
-        setStep(6); // vai para a tela de agradecimento
-      }catch(err){
-        alert('Não consegui enviar agora. Podemos testar a integração do Sheets em seguida.');
-        console.error(err);
+      } finally {
+        setStep(6); // vai direto para a tela de agradecimento
+        setTimeout(() => {
+          isSubmitting = false;
+          enviarBtn.textContent = originalTxt;
+          enviarBtn.disabled = false;
+        }, 1500);
       }
     });
 
